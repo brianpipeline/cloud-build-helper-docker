@@ -32,6 +32,6 @@ steps:
       - "pipefail"
       - "-c"
       - |-
-        docker build -f Dockerfile -t us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-build-helper-docker/cloud-build-helper-docker:0.1 .
+        docker push -f Dockerfile -t us-central1-docker.pkg.dev/${PROJECT_ID}/cloud-build-helper-docker/cloud-build-helper-docker:0.1
 options:
   substitutionOption: "ALLOW_LOOSE"
