@@ -1,4 +1,15 @@
 steps:
+  - name: "bats/bats"
+    id: "Run bats tests to validate tester script"
+    entrypoint: "bash"
+    args:
+      - "-eEuo"
+      - "pipefail"
+      - "-c"
+      - |-
+        #!/bin/bash
+        bats scripts/*
+
   - name: "gcr.io/cloud-builders/gcloud"
     id: "Create artifact registry repository"
     entrypoint: "bash"
