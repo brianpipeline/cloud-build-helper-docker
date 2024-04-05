@@ -9,6 +9,7 @@ deployPipelines() {
     pipelineName=$(yq eval '.pipelineName' "pipeline.yaml")
     pipelineType=$(yq eval '.pipelineType' "pipeline.yaml")
     pubSubTopic=""
+    webhookSecret=""
     if [[ $pipelineType == "pubsub" ]]; then
         if gcloud pubsub topics describe "$pipelineName" >/dev/null 2>&1; then
             echo "Topic $pipelineName already exists."
@@ -20,6 +21,9 @@ deployPipelines() {
             fi
         fi
         pubSubTopic="--topic=projects/${projectId}/topics/$pipelineName"
+    fi
+    if [[ $pipelineType == "webhook" ]]; then
+        webhookSecret="--secret=projects/${projectId}/secrets/webhook-secret/versions/1"
     fi
     substitutions=$(yq eval '.substitutions' "cloudbuild.yaml")
     substitutionsInOneLine=""
@@ -45,7 +49,7 @@ deployPipelines() {
         fi
     else
         echo "Creating pipeline $pipelineName"
-        if ! gcloud builds triggers create "$pipelineType" --name="$pipelineName" --secret="projects/212799175996/secrets/webhook-secret/versions/1" --region="us-central1" --inline-config="cloudbuild.yaml" --substitutions "$substitutionsInOneLine" "$pubSubTopic"; then
+        if ! gcloud builds triggers create "$pipelineType" --name="$pipelineName" "$webhookSecret" --region="us-central1" --inline-config="cloudbuild.yaml" --substitutions "$substitutionsInOneLine" "$pubSubTopic"; then
             echo "Failed to create pipeline $pipelineName"
             exit 1
         fi
