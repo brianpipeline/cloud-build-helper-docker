@@ -41,7 +41,6 @@ teardown() {
     # Check if it fails
     [ "$status" -eq 1 ]
     [[ "$output" == *"Failed to update pipeline"* ]]
-    echo $PATH
 }
 
 @test "deployPipelines should exit when yq cannot find required values in pipeline yaml" {
@@ -53,5 +52,4 @@ teardown() {
     # Check if it fails
     [ "$status" -eq 1 ]
     [[ "$output" == *"pipeline.yaml is missing pipelineType or pipelineName"* ]]
-    echo $PATH
 }

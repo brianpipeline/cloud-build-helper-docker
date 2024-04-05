@@ -1,7 +1,11 @@
 #!/bin/bash
 createReplyToTopic() {
     projectId="$1"
-    buildId="$2"
-    echo "$projectId"
-    echo "woooo"
+    topicName="$2"
+
+    if ! gcloud pubsub topics create "$topicName"; then
+        echo "Failed to create topic $topicName"
+        exit 1
+    fi
+    echo "projects/${projectId}/topics/${topicName}"
 }
