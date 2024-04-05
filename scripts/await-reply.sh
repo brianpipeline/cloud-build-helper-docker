@@ -19,6 +19,7 @@ awaitReply() {
         --topic "$replyTopic"
 
     start_time=$(date +%s)
+    timedOut=false
 
     # Loop until message arrives or timeout
     while true; do
@@ -29,9 +30,16 @@ awaitReply() {
             break
         elif ((elapsed_time >= timeout_duration)); then
             echo "Timeout reached. No message received within allotted time."
-            exit 1
+            timedOut=true
+            break
         else
             sleep 10
         fi
     done
+
+    gcloud pubsub subscriptions delete "$subscription_name" --quiet
+    gcloud pubsub topics delete "$replyTopic" --quiet
+    if $timedOut; then
+        exit 1
+    fi
 }
