@@ -49,7 +49,7 @@ teardown() {
     [[ "$output" == *"Timeout reached. No message received within allotted time."* ]]
 }
 
-@test "awaitReply should time out" {
+@test "awaitReply should complete with exit code 0 when message is received." {
     # Stub gcloud builds submit command to return failure
     stub gcloud "echo hello"
     # Run your function
