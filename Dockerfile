@@ -11,3 +11,6 @@ RUN chmod +x /scripts -R
 
 ENV PATH="/scripts:${PATH}"
 USER 0:0
+
+# Set the entrypoint to /bin/bash
+ENTRYPOINT ["/bin/bash"]
