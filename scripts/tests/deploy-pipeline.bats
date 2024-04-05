@@ -34,11 +34,24 @@ teardown() {
 @test "deployPipelines should handle failed build submission" {
     # Stub gcloud builds submit command to return failure
     stub gcloud "exit 1"
+    stub yq "exit 0"
     # Run your function
     run deployPipelines
     echo $output
     # Check if it fails
     [ "$status" -eq 1 ]
     [[ "$output" == *"Failed to update pipeline"* ]]
+    echo $PATH
+}
+
+@test "deployPipelines should exit when yq cannot find required values in pipeline yaml" {
+    # Stub gcloud builds submit command to return failure
+    stub yq "exit 1"
+    # Run your function
+    run deployPipelines
+    echo $output
+    # Check if it fails
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"pipeline.yaml is missing pipelineType or pipelineName"* ]]
     echo $PATH
 }
