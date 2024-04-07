@@ -48,11 +48,14 @@ deployPipelines() {
             exit 1
         fi
     else
+        set -x
         echo "Creating pipeline $pipelineName"
+        echo "gcloud builds triggers create \"$pipelineType\" --name=\"$pipelineName\" \"$webhookSecret\" --region=\"us-central1\" --inline-config=\"cloudbuild.yaml\" --substitutions \"$substitutionsInOneLine\" \"$pubSubTopic\""
         if ! gcloud builds triggers create "$pipelineType" --name="$pipelineName" "$webhookSecret" --region="us-central1" --inline-config="cloudbuild.yaml" --substitutions "$substitutionsInOneLine" "$pubSubTopic"; then
             echo "Failed to create pipeline $pipelineName"
             exit 1
         fi
+        set +x
     fi
 
     echo "Pipeline deployed."
