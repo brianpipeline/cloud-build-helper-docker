@@ -39,6 +39,7 @@ deployPipelines() {
             substitutionsInOneLine="$substitutionsInOneLine$substitution"
         fi
     done
+    substitutionsInOneLine="${substitutionsInOneLine%,}"
     if [[ -z "$(gcloud builds triggers describe "$pipelineName" --region=us-central1 2>&1 >/dev/null)" ]]; then
         echo "Pipeline $pipelineName already exists. Updating."
         temp_file=$(mktemp)
