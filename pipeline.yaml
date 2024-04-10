@@ -1,0 +1,2 @@
+type: "dockerfile-deploy"
+repositoryName: "cloud-build-helper-docker"
