@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load $(pwd)/scripts/await-reply.sh
+load $(pwd)/await-reply.sh
 BATS_TEST_DIRNAME=$(pwd)
 export PATH="$BATS_TEST_DIRNAME/stub:$PATH"
 

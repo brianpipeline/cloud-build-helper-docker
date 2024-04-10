@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load $(pwd)/scripts/deploy-pipeline.sh
+load $(pwd)/deploy-pipeline.sh
 BATS_TEST_DIRNAME=$(pwd)
 export PATH="$BATS_TEST_DIRNAME/stub:$PATH"
 

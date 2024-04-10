@@ -19,18 +19,23 @@ awaitReply() {
         --topic "$replyTopic"
 
     start_time=$(date +%s)
-    timedOut=false
+    pipelineFailed=false
 
     # Loop until message arrives or timeout
     while true; do
         current_time=$(date +%s)
         elapsed_time=$((current_time - start_time))
 
-        if pull_message "$subscription_name"; then
+        message=$(pull_message "$subscription_name")
+        if [[ -n $message ]]; then
+            echo "Received message: $message"
+            if [[ $message == "Pipeline failed." ]]; then
+                pipelineFailed=true
+            fi
             break
         elif ((elapsed_time >= timeout_duration)); then
             echo "Timeout reached. No message received within allotted time."
-            timedOut=true
+            pipelineFailed=true
             break
         else
             sleep 10
@@ -39,7 +44,7 @@ awaitReply() {
 
     gcloud pubsub subscriptions delete "$subscription_name" --quiet
     gcloud pubsub topics delete "$replyTopic" --quiet
-    if $timedOut; then
+    if $pipelineFailed; then
         exit 1
     fi
 }

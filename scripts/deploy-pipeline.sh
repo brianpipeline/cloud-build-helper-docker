@@ -1,6 +1,7 @@
 #!/bin/bash
 deployPipelines() {
     projectId="$1"
+    replyTopic="$2"
 
     if ! (yq eval '.pipelineType' "pipeline.yaml" && yq eval '.pipelineName' "pipeline.yaml"); then
         echo "pipeline.yaml is missing pipelineType or pipelineName"
@@ -17,6 +18,7 @@ deployPipelines() {
             echo "Creating topic $pipelineName"
             if ! gcloud pubsub topics create "$pipelineName"; then
                 echo "Failed to create topic $pipelineName"
+                sendMessage "$replyTopic" "Pipeline failed."
                 exit 1
             fi
         fi
@@ -46,16 +48,16 @@ deployPipelines() {
         yq eval 'del(.substitutions)' "cloudbuild.yaml" >"$temp_file"
         if ! (gcloud builds triggers update "$pipelineType" "$pipelineName" --region="us-central1" --clear-substitutions --inline-config="$temp_file" && gcloud builds triggers update "$pipelineType" "$pipelineName" --region="us-central1" --update-substitutions "$substitutionsInOneLine" --inline-config="$temp_file"); then
             echo "Failed to update pipeline $pipelineName"
+            sendMessage "$replyTopic" "Pipeline failed."
             exit 1
         fi
     else
-        set -x
         echo "Creating pipeline $pipelineName"
         if ! gcloud builds triggers create "$pipelineType" --name="$pipelineName" "$webhookSecret" --region="us-central1" --inline-config="cloudbuild.yaml" --substitutions "$substitutionsInOneLine" $pubSubTopic; then
             echo "Failed to create pipeline $pipelineName"
+            sendMessage "$replyTopic" "Pipeline failed."
             exit 1
         fi
-        set +x
     fi
 
     echo "Pipeline deployed."

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-reply() {
+sendMessage() {
     local replyTopic=$1
     local replyMessage=$2
 

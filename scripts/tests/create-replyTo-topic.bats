@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load $(pwd)/scripts/create-replyTo-topic.sh
+load $(pwd)/create-replyTo-topic.sh
 BATS_TEST_DIRNAME=$(pwd)
 export PATH="$BATS_TEST_DIRNAME/stub:$PATH"
 
