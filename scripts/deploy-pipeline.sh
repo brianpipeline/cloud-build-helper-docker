@@ -1,4 +1,5 @@
 #!/bin/bash
+source send-message.sh
 deployPipelines() {
     projectId="$1"
     replyTopic="$2"

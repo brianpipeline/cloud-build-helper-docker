@@ -1,5 +1,6 @@
 #!/usr/bin/env bats
 
+load $(pwd)/send-message.sh
 load $(pwd)/create-artifact-registry.sh
 BATS_TEST_DIRNAME=$(pwd)
 export PATH="$BATS_TEST_DIRNAME/stub:$PATH"
@@ -25,7 +26,7 @@ teardown() {
     stub gcloud "exit 0"
     stub yq "echo test-repo"
     # Run your function
-    run createArtifactRegistry
+    run createArtifactRegistry "replyTopic"
     # Check if it succeeds
     [ "$status" -eq 0 ]
     [[ "$output" == *"Artifact Registry test-repo already exists."* ]]
@@ -36,7 +37,7 @@ teardown() {
     stub gcloud "exit 1"
     stub yq "echo test-repo"
     # Run your function
-    run createArtifactRegistry
+    run createArtifactRegistry "replyTopic"
     # Check if it succeeds
     [ "$status" -eq 1 ]
     [[ "$output" == *"Failed to create Artifact Registry test-repo"* ]]
