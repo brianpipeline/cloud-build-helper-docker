@@ -8,5 +8,7 @@ createArtifactRegistry() {
             echo "Failed to create Artifact Registry $repositoryName"
             exit 1
         fi
+    else
+        echo "Artifact Registry $repositoryName already exists."
     fi
 }

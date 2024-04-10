@@ -23,10 +23,12 @@ teardown() {
 @test "createArtifactRegistry should successfully create an artifact registry" {
     # Stub gcloud builds submit command to return success
     stub gcloud "exit 0"
+    stub yq "echo test-repo"
     # Run your function
     run createArtifactRegistry
     # Check if it succeeds
     [ "$status" -eq 0 ]
+    [[ "$output" == *"Artifact Registry test-repo already exists."* ]]
 }
 
 @test "createArtifactRegistry should fail to create an artifact registry" {
