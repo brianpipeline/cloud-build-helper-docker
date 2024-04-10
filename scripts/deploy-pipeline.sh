@@ -2,6 +2,11 @@
 deployPipelines() {
     projectId="$1"
     replyTopic="$2"
+    git_ref="$3"
+    if [[ $git_ref == *"main"* ]]; then
+        echo "Skipping pipeline deployment, as we are not on the main branch."
+        exit 0
+    fi
 
     if ! (yq eval '.pipelineType' "pipeline.yaml" && yq eval '.pipelineName' "pipeline.yaml"); then
         echo "pipeline.yaml is missing pipelineType or pipelineName"
