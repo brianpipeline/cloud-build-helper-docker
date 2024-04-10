@@ -1,15 +1,4 @@
 #!/bin/bash
-pull_message() {
-    subscription_name=$1
-    message=$(gcloud pubsub subscriptions pull --auto-ack "$subscription_name" --format='value(message.data)' 2>/dev/null)
-    if [[ -n $message ]]; then
-        echo "Received Message: $message"
-        return 0
-    else
-        return 1
-    fi
-}
-
 awaitReply() {
     local replyTopic=$1
     local subscription_name=$2
@@ -26,12 +15,17 @@ awaitReply() {
         current_time=$(date +%s)
         elapsed_time=$((current_time - start_time))
 
-        message=$(pull_message "$subscription_name")
-        if [[ -n $message ]]; then
+        message=$(gcloud pubsub subscriptions pull --auto-ack "$subscription_name" --format='value(message.data)')
+        exit_code=$?
+        if [[ $exit_code -eq 0 && -n $message ]]; then
             echo "Received message: $message"
-            if [[ $message == "Pipeline failed." ]]; then
+            if [[ $message != "Pipeline succeeded." ]]; then
                 pipelineFailed=true
             fi
+            break
+        elif [[ $exit_code -eq 1 ]]; then
+            echo "Error: gcloud pubsub command failed."
+            pipelineFailed=true
             break
         elif ((elapsed_time >= timeout_duration)); then
             echo "Timeout reached. No message received within allotted time."
