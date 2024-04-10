@@ -9,7 +9,7 @@ steps:
       - "-c"
       - |-
         #!/bin/bash
-        bats tests/*
+        bats bats-tests/*
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "Create artifact registry repository"
