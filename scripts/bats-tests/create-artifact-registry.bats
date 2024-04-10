@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load $(pwd)/create-replyTo-topic.sh
+load $(pwd)/create-artifact-registry.sh
 BATS_TEST_DIRNAME=$(pwd)
 export PATH="$BATS_TEST_DIRNAME/stub:$PATH"
 
@@ -20,23 +20,22 @@ teardown() {
     rm_stubs
 }
 
-@test "createReplyToTopic should successfully create topic" {
+@test "createArtifactRegistry should successfully create an artifact registry" {
     # Stub gcloud builds submit command to return success
     stub gcloud "exit 0"
     # Run your function
-    run createReplyToTopic "test-project" "test-topic"
+    run createArtifactRegistry
     # Check if it succeeds
     [ "$status" -eq 0 ]
-    [[ "$output" == *"projects/test-project/topics/test-topic"* ]]
 }
 
-@test "createReplyToTopic should handle failed topic creation" {
-    # Stub gcloud builds submit command to return failure
+@test "createArtifactRegistry should fail to create an artifact registry" {
+    # Stub gcloud builds submit command to return success
     stub gcloud "exit 1"
+    stub yq "echo test-repo"
     # Run your function
-    run createReplyToTopic "test-project" "test-topic"
-    echo $output
-    # Check if it fails
+    run createArtifactRegistry
+    # Check if it succeeds
     [ "$status" -eq 1 ]
-    [[ "$output" == *"Failed to create topic test-topic"* ]]
+    [[ "$output" == *"Failed to create Artifact Registry test-repo"* ]]
 }
