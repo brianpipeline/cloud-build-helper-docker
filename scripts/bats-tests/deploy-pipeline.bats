@@ -25,10 +25,21 @@ teardown() {
     stub gcloud "exit 0"
     stub yq "exit 0"
     # Run your function
-    run deployPipelines
+    run deployPipelines "projectId" "replyTopic" "refs/heads/main"
     # Check if it succeeds
     [ "$status" -eq 0 ]
     [[ "$output" == *"Pipeline deployed."* ]]
+}
+
+@test "deployPipelines should not deploy if branch is not main" {
+    # Stub gcloud builds submit command to return success
+    stub gcloud "exit 0"
+    stub yq "exit 0"
+    # Run your function
+    run deployPipelines "projectId" "replyTopic" "refs/heads/whatever"
+    # Check if it succeeds
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Skipping pipeline deployment, as we are not on the main branch."* ]]
 }
 
 @test "deployPipelines should handle failed build submission" {
@@ -36,7 +47,7 @@ teardown() {
     stub gcloud "exit 1"
     stub yq "exit 0"
     # Run your function
-    run deployPipelines
+    run deployPipelines "projectId" "replyTopic" "refs/heads/main"
     echo $output
     # Check if it fails
     [ "$status" -eq 1 ]
@@ -47,7 +58,7 @@ teardown() {
     # Stub gcloud builds submit command to return failure
     stub yq "exit 1"
     # Run your function
-    run deployPipelines
+    run deployPipelines "projectId" "replyTopic" "refs/heads/main"
     echo $output
     # Check if it fails
     [ "$status" -eq 1 ]

@@ -3,7 +3,7 @@ deployPipelines() {
     projectId="$1"
     replyTopic="$2"
     git_ref="$3"
-    if [[ $git_ref == *"main"* ]]; then
+    if [[ $git_ref != "refs/heads/main" ]]; then
         echo "Skipping pipeline deployment, as we are not on the main branch."
         exit 0
     fi
