@@ -16,8 +16,7 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/d
 RUN apt-get update && apt-get install -y \
     docker-ce=${DOCKER_VERSION} \
     docker-ce-cli=${DOCKER_VERSION} \
-    containerd.io \
-    docker-compose-plugin
+    docker-compose docker-compose-plugin
 
 # Clean up APT
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
