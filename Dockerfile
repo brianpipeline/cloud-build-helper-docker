@@ -33,5 +33,8 @@ RUN chmod +x /scripts -R
 ENV PATH="/scripts:${PATH}"
 USER 0:0
 
+# Test change - remove later.
+RUN echo "Hello World"
+
 # Set the entrypoint to /bin/bash
 ENTRYPOINT ["/bin/bash"]
