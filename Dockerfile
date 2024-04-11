@@ -5,6 +5,9 @@ ENV YQ_VERSION=4.43.1
 ENV DOCKER_VERSION=5:24.0.9-1~ubuntu.20.04~focal
 ENV TERRAFORM_VERSION=1.8.0
 
+RUN apt-get update && apt-get install -y \
+    unzip 
+    
 # Install yq
 RUN curl -sL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64 -o /usr/bin/yq && chmod +x /usr/bin/yq
 
