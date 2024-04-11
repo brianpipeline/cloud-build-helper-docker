@@ -1,6 +1,7 @@
 #!/bin/bash
 source send-message.sh
 
+# Only do on main.
 buildAndPushDocker() {
     replyTopic=$1
     projectId=$2
