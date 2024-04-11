@@ -19,6 +19,11 @@ RUN apt-get update && apt-get install -y \
     containerd.io \
     docker-compose-plugin
 
+# Install Bats
+RUN git clone https://github.com/bats-core/bats-core.git && \
+    cd bats-core && \
+    ./install.sh /usr/local
+
 # Clean up APT
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
