@@ -2,3 +2,4 @@ type: "dockerfile-deploy"
 repositoryName: "cloud-build-helper-docker"
 artifactName: "cloud-build-helper-docker"
 testCommand: "cd scripts && bats bats-tests/*"
+
