@@ -26,19 +26,30 @@ teardown() {
     stub gcloud "exit 0"
     stub yq "echo test-repo"
     # Run your function
-    run createArtifactRegistry "replyTopic"
+    run createArtifactRegistry "replyTopic" "refs/heads/main"
     # Check if it succeeds
     [ "$status" -eq 0 ]
     [[ "$output" == *"Artifact Registry test-repo already exists."* ]]
 }
 
-@test "createArtifactRegistry should fail to create an artifact registry" {
+@test "createArtifactRegistry should exit 0 when gcloud fails" {
     # Stub gcloud builds submit command to return success
     stub gcloud "exit 1"
     stub yq "echo test-repo"
     # Run your function
-    run createArtifactRegistry "replyTopic"
+    run createArtifactRegistry "replyTopic" "refs/heads/main"
     # Check if it succeeds
     [ "$status" -eq 1 ]
     [[ "$output" == *"Failed to create Artifact Registry test-repo"* ]]
+}
+
+@test "createArtifactRegistry should not create artifact registry when on release branch" {
+    # Stub gcloud builds submit command to return success
+    stub gcloud "exit 1"
+    stub yq "echo test-repo"
+    # Run your function
+    run createArtifactRegistry "replyTopic" "refs/heads/whatever"
+    # Check if it succeeds
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Not on main or release branch, skipping Artifact Registry creation."* ]]
 }
