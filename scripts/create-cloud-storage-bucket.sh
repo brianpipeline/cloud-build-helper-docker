@@ -1,6 +1,7 @@
 #!/bin/bash
 source send-message.sh
 
+# Maybe only do this on main, eventually.
 createCloudStorageBucket() {
     local repoName=$1
     local replyTopic=$2
