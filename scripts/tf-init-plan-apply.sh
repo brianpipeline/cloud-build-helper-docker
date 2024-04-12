@@ -7,10 +7,8 @@ runTfInitPlanApply() {
     local replyTopic=$2
 
     if ! terraform init \
-        -backend-config="bucket=gs://${repoName}_tf_state" \
-        -backend-config="prefix=terraform/state" \
-        -backend-config="lock=true" \
-        -backend-config="lock_file=terraform.tflock"; then
+        -backend-config="bucket=gs://${repoName}_tf_state/" \
+        -backend-config="prefix=terraform/state"; then
         echo "Terraform init failed."
         sendMessage "$replyTopic" "Pipeline failed."
         exit 1
