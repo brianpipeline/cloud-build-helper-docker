@@ -5,7 +5,7 @@ source send-message.sh
 createCloudStorageBucket() {
     local repoName=$1
     local replyTopic=$2
-    local bucketName="gs://${repoName}_tf_state/"
+    local bucketName="gs://${repoName}_terraform/"
 
     if ! gsutil ls -b "$bucketName" &>/dev/null; then
         echo "Bucket $bucketName does not exist - creating bucket."

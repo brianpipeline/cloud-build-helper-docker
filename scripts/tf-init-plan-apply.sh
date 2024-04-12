@@ -8,7 +8,7 @@ runTfInitPlanApply() {
     local replyTopic=$3
 
     if ! terraform init \
-        -backend-config="bucket=${repoName}_tf_state" \
+        -backend-config="bucket=${repoName}_terraform" \
         -backend-config="prefix=terraform/state"; then
         echo "Terraform init failed."
         sendMessage "$replyTopic" "Pipeline failed."

@@ -29,7 +29,7 @@ teardown() {
     run createCloudStorageBucket "my_repo" "replyTopic"
     # Check if it succeeds
     [ "$status" -eq 1 ]
-    [[ "$output" =~ "Bucket gs://my_repo_tf_state/ does not exist - creating bucket." && "$output" =~ "Failed to create bucket 'gs://my_repo_tf_state/'." ]]
+    [[ "$output" =~ "Bucket gs://my_repo_terraform/ does not exist - creating bucket." && "$output" =~ "Failed to create bucket 'gs://my_repo_terraform/'." ]]
 }
 
 @test "createCloudStorageBucket should not create bucket when bucket already exists." {
@@ -40,7 +40,7 @@ teardown() {
     # Check if it succeeds
     echo $output
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "Bucket gs://my_repo_tf_state/ already exists." ]]
+    [[ "$output" =~ "Bucket gs://my_repo_terraform/ already exists." ]]
 }
 
 # I can't create any more tests without redoing how the stub function works. Not doing any more since we're moving to Python soon anyway.
