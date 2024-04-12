@@ -14,4 +14,11 @@ runTfInitPlanApply() {
         exit 1
     fi
     echo "Terraform init succeeded."
+
+    if ! terraform plan -out=tfplan; then
+        echo "Terraform plan failed."
+        sendMessage "$replyTopic" "Pipeline failed."
+        exit 1
+    fi
+    echo "Terraform init succeeded"
 }
