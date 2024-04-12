@@ -20,6 +20,9 @@ triggerPipelines() {
     "dockerfile-deploy")
         sendMessage "projects/$projectId/topics/dockerfile-deploy" "$message"
         ;;
+    "terraform-deploy")
+        sendMessage "projects/$projectId/topics/terraform-deploy" "$message"
+        ;;
     *)
         echo "Unknown repo type: $repoType"
         exit 1
