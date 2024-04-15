@@ -24,9 +24,8 @@ teardown() {
 
 @test "deployToCloudRun should successfully deploy artifact." {
     stub gcloud "exit 0"
-    stub yq "echo java21"
     # Run your function
-    run deployToCloudRun "replyTopic" "testRepo" "projectId" "1.0.0" "dev" "serviceAccountcloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com"
+    run deployToCloudRun "replyTopic" "testRepo" "projectId" "1.0.0" "dev" "serviceAccountcloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com" "java21"
     # Check if it succeeds
     [ "$status" -eq 0 ]
     [[ "$output" == *"Cloud Run deployment succeeded."* ]]
@@ -36,7 +35,7 @@ teardown() {
     stub gcloud "exit 0"
     stub yq "echo weird"
     # Run your function
-    run deployToCloudRun "replyTopic" "testRepo" "projectId" "1.0.0" "dev" "serviceAccountcloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com"
+    run deployToCloudRun "replyTopic" "testRepo" "projectId" "1.0.0" "dev" "serviceAccountcloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com" "weird"
     # Check if it succeeds
     [ "$status" -eq 1 ]
     [[ "$output" == *"Unknown project type: weird"* ]]
@@ -46,7 +45,7 @@ teardown() {
     stub gcloud "exit 1"
     stub yq "echo java21"
     # Run your function
-    run deployToCloudRun "replyTopic" "testRepo" "projectId" "1.0.0" "dev" "serviceAccountcloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com"
+    run deployToCloudRun "replyTopic" "testRepo" "projectId" "1.0.0" "dev" "serviceAccountcloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com" "java21"
     # Check if it succeeds
     [ "$status" -eq 1 ]
     [[ "$output" == *"Failed to deploy to Cloud Run."* ]]
