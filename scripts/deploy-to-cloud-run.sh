@@ -3,7 +3,7 @@ source send-message.sh
 
 deployToCloudRun() {
     local replyTopic=$1
-    local repoName=$2
+    local serviceName=$2
     local projectId=$3
     local tagToDeploy=$4
     local env=$5
@@ -22,9 +22,9 @@ deployToCloudRun() {
         exit 1
     fi
 
-    if ! gcloud run deploy "${repoName}"-"${env}" \
+    if ! gcloud run deploy "${serviceName}"-"${env}" \
         --service-account="$serviceAccount" \
-        --image=us-central1-docker.pkg.dev/"${projectId}"/"${repoName}"/"${repoName}":"${tagToDeploy}" \
+        --image=us-central1-docker.pkg.dev/"${projectId}"/"${serviceName}"/"${serviceName}":"${tagToDeploy}" \
         --ingress=all \
         --allow-unauthenticated \
         --min-instances=1 \
