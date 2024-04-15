@@ -8,8 +8,7 @@ deployToCloudRun() {
     local tagToDeploy=$4
     local env=$5
     local serviceAccount=$6
-    local projectType
-    projectType=$(yq eval '.type' "pipeline.yaml")
+    local projectType=$7
     local port
     local envVar=""
 
