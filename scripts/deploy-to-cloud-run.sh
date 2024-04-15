@@ -11,11 +11,14 @@ deployToCloudRun() {
     local projectType
     projectType=$(yq eval '.type' "pipeline.yaml")
     local port
+    local envVar=""
 
     if [[ $projectType == "java21" ]]; then
         port=8080
+        envVar="SPRING_PROFILES_ACTIVE=${env}"
     elif [[ $projectType == "node20" ]]; then
         port=3000
+        envVar="NODE_ENV=${env}"
     else
         echo "Unknown project type: $projectType"
         sendMessage "$replyTopic" "Pipeline failed."
@@ -31,6 +34,7 @@ deployToCloudRun() {
         --max-instances=1 \
         --project="$projectId" \
         --region=us-central1 \
+        --set-env-vars="$envVar" \
         --port="$port"; then
         echo "Failed to deploy to Cloud Run."
         sendMessage "$replyTopic" "Pipeline failed."
