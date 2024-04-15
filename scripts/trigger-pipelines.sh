@@ -23,6 +23,9 @@ triggerPipelines() {
     "terraform-deploy")
         sendMessage "projects/$projectId/topics/terraform-deploy" "$message"
         ;;
+    "java21")
+        sendMessage "projects/$projectId/topics/gradle-java21-deploy" "$message"
+        ;;
     *)
         echo "Unknown repo type: $repoType"
         exit 1
