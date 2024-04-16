@@ -32,7 +32,7 @@ triggerDeployPipelines() {
     serviceAccount="cloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com"
 
     serviceName=$(getGradleProjectName)
-    tagToDeploy="$(getGradleProjectName)-$(getGradleProjectVersion)-$shortBuildId"
+    tagToDeploy="$(getGradleProjectVersion)-$shortBuildId"
 
     envsToDeployTo=$(yq eval '.envsToDeployTo | join(" ")' "pipeline.yaml")
     projectType=$(yq eval '.type' "pipeline.yaml")
