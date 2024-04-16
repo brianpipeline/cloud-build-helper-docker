@@ -1,5 +1,5 @@
 #!/bin/bash
-source sendMessage.sh
+source send-message.sh
 createReplyToTopic() {
     projectId="$1"
     topicName="$2"

@@ -1,7 +1,7 @@
 #!/bin/bash
 source create-replyTo-topic.sh
 source await-reply.sh
-source sendMessage.sh
+source send-message.sh
 
 getGradleProjectName() {
     local name
@@ -27,7 +27,8 @@ triggerDeployPipelines() {
     gitRef="$1"
     projectId="$2"
     shortBuildId="$3"
-    replyTopic="$4"
+    timeout="$4"
+    replyTopic="$5"
     serviceAccount="cloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com"
 
     serviceName=$(getGradleProjectName)
@@ -38,13 +39,12 @@ triggerDeployPipelines() {
 
     if [[ $gitRef != "refs/heads/main" && $gitRef != *"release"* ]]; then
         echo "Not on main or release branch, skipping deployment."
-        sendMessage "$replyTopic" "Pipeline failed."
         exit 0
     fi
     if [[ $projectType != "java21" && $projectType != "node20" ]]; then
         echo "Not a valid project type, not deploying."
         sendMessage "$replyTopic" "Pipeline failed."
-        exit 0
+        exit 1
     fi
 
     for env in $envsToDeployTo; do
@@ -54,7 +54,7 @@ triggerDeployPipelines() {
         local message="{ \"cloudrun\": { \"name\": \"$serviceName\", \"tag\": \"$tagToDeploy\", \"env\": \"$env\", \"service_account\": \"$serviceAccount\", \"projectType\": \"$projectType\" }, \"reply_topic\": \"$envReplyTopic\" }"
         sendMessage "projects/$projectId/topics/deploy-to-env-pipeline" "$message"
         echo "Pipeline triggered."
-        if ! awaitReply "$envReplyTopic" "subscription_$replyToHash" "600"; then
+        if ! awaitReply "$envReplyTopic" "subscription_$replyToHash" "$timeout"; then
             echo "Deployment to $env failed."
             sendMessage "$replyTopic" "Pipeline failed."
             exit 1
