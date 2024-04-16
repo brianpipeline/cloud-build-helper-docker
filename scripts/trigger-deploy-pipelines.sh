@@ -34,7 +34,7 @@ triggerDeployPipelines() {
     serviceName=$(getGradleProjectName)
     tagToDeploy="$(getGradleProjectName)-$(getGradleProjectVersion)-$shortBuildId"
 
-    envsToDeployTo=$(yq eval '.envsToDeployTo | join(" ")' your_file.yaml)
+    envsToDeployTo=$(yq eval '.envsToDeployTo | join(" ")' pipeline.yaml)
     projectType=$(yq eval '.type' "pipeline.yaml")
 
     if [[ $gitRef != "refs/heads/main" && $gitRef != *"release"* ]]; then
