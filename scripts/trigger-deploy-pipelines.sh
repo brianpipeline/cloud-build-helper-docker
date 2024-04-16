@@ -50,7 +50,7 @@ triggerDeployPipelines() {
     for env in $envsToDeployTo; do
         local replyToHash
         replyToHash=$(echo $RANDOM | md5sum | head -c 8)
-        envReplyTopic=$(createReplyToTopic "$projectId" "topic_$replyToHash" "$replyTopic")
+        envReplyTopic=$(createReplyToTopic "$projectId" "topic_$replyToHash")
         local message="{ \"cloudrun\": { \"name\": \"$serviceName\", \"tag\": \"$tagToDeploy\", \"env\": \"$env\", \"service_account\": \"$serviceAccount\", \"projectType\": \"$projectType\" }, \"reply_topic\": \"$envReplyTopic\" }"
         sendMessage "projects/$projectId/topics/deploy-to-env-pipeline" "$message"
         echo "Pipeline triggered."
