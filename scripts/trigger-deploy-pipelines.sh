@@ -44,6 +44,7 @@ getNodeVersionName() {
 }
 
 triggerDeployPipelines() {
+    set -x
     gitRef="$1"
     projectId="$2"
     shortBuildId="$3"
