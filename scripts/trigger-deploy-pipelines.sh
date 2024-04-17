@@ -44,7 +44,6 @@ getNodeVersionName() {
 }
 
 triggerDeployPipelines() {
-    set -x
     gitRef="$1"
     projectId="$2"
     shortBuildId="$3"
@@ -85,8 +84,6 @@ triggerDeployPipelines() {
             tagToDeploy="$(getNodeVersionName)"
         fi
     fi
-    serviceName=$(getGradleProjectName)
-    tagToDeploy="$(getGradleProjectVersion)-$shortBuildId"
 
     for env in $envsToDeployTo; do
         local replyToHash
