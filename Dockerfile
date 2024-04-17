@@ -6,6 +6,7 @@ ENV DOCKER_VERSION=5:24.0.9-1~ubuntu.20.04~focal
 ENV TERRAFORM_VERSION=1.8.0
 
 RUN apt-get update && apt-get install -y \
+    jq \
     unzip 
     
 # Install yq
