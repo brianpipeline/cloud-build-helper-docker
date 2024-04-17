@@ -23,6 +23,26 @@ getGradleProjectVersion() {
     echo "$version"
 }
 
+getNodeProjectName() {
+    local name
+    name=$(jq -r '.name' package.json)
+    if [[ -z "$name" ]]; then
+        echo "Failed to find project name from package.json."
+        exit 1
+    fi
+    echo "$name"
+}
+
+getNodeVersionName() {
+    local version
+    version=$(jq -r '.version' package.json)
+    if [[ -z "$version" ]]; then
+        echo "Failed to find project version from package.json."
+        exit 1
+    fi
+    echo "$version"
+}
+
 triggerDeployPipelines() {
     gitRef="$1"
     projectId="$2"
@@ -30,9 +50,6 @@ triggerDeployPipelines() {
     timeout="$4"
     replyTopic="$5"
     serviceAccount="cloud-run@cloud-build-pipeline-396819.iam.gserviceaccount.com"
-
-    serviceName=$(getGradleProjectName)
-    tagToDeploy="$(getGradleProjectVersion)-$shortBuildId"
 
     envsToDeployTo=$(yq eval '.envsToDeployTo | join(" ")' "pipeline.yaml")
     projectType=$(yq eval '.type' "pipeline.yaml")
@@ -46,6 +63,29 @@ triggerDeployPipelines() {
         sendMessage "$replyTopic" "Pipeline failed."
         exit 1
     fi
+
+    serviceName=""
+    tagToDeploy=""
+
+    if [[ $projectType == "java21" ]]; then
+        if [[ $gitRef == "refs/heads/main" ]]; then
+            serviceName=$(getGradleProjectName)
+            tagToDeploy="$(getGradleProjectVersion)-$shortBuildId"
+        elif [[ $gitRef == *"release"* ]]; then
+            serviceName=$(getGradleProjectName)
+            tagToDeploy="$(getGradleProjectVersion)"
+        fi
+    elif [[ $projectType == "node20" ]]; then
+        if [[ $gitRef == "refs/heads/main" ]]; then
+            serviceName=$(getNodeProjectName)
+            tagToDeploy="$(getNodeVersionName)-SNAPSHOT-$shortBuildId"
+        elif [[ $gitRef == *"release"* ]]; then
+            serviceName=$(getNodeProjectName)
+            tagToDeploy="$(getNodeVersionName)"
+        fi
+    fi
+    serviceName=$(getGradleProjectName)
+    tagToDeploy="$(getGradleProjectVersion)-$shortBuildId"
 
     for env in $envsToDeployTo; do
         local replyToHash
