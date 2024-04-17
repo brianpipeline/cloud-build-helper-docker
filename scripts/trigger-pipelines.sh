@@ -26,6 +26,9 @@ triggerPipelines() {
     "java21")
         sendMessage "projects/$projectId/topics/gradle-java21-deploy" "$message"
         ;;
+    "node20")
+        sendMessage "projects/$projectId/topics/node20-deploy" "$message"
+        ;;
     *)
         echo "Unknown repo type: $repoType"
         exit 1
